@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 ---
 title: "Tugas Praktikum 1"
 author: "Muhammad Rizky Fajar_G1401211009"
