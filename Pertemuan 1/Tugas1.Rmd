@@ -1,3 +1,4 @@
+
 ---
 title: "Tugas Praktikum 1"
 author: "Muhammad Rizky Fajar_G1401211009"
@@ -23,7 +24,7 @@ library("TSA")
 ```{r}
 #install.packages("rio") #install jika belum ada
 library(rio)
-data <- import("https://raw.githubusercontent.com/mhdrfajar/mpdw/main/Tugas%20Praktikum%201/Saham_Meta.csv")
+data <- import("https://raw.githubusercontent.com/mhdrfajar/mpdw/main/data/saham_meta.csv")
 ```
 
 ## Eksplorasi Data
