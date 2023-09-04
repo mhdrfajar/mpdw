@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: "Tugas Praktikum 1"
 author: "Muhammad Rizky Fajar_G1401211009"
@@ -622,3 +623,6 @@ Kedua metode dapat dibandingkan dengan menggunakan ukuran akurasi yang sama. Con
 ## Kesimpulan
 
 Pada kasus ini, dari keempat metode yang telah dicobakan, peramalan data yang berpola tren dengan menggunakan metode Double Moving Average (DMA) dengan m=5 manghasilkan peramalan yang paling baik karena nilai MAPE yang dihasilkan merupakan yang terkecil, baik pada data latih maupun pada data uji
+=======
+
+>>>>>>> 6b7157e613c23e97ce9ecbd2b3827eac68df92af
