@@ -604,7 +604,7 @@ row.names(akurasitestingdes)<- c("SSE", "MSE", "MAPE")
 colnames(akurasitestingdes) <- c("des ske1","des ske2","des opt")
 akurasitestingdes
 ```
-perhitungan akurasi menggunakan data latih dan dengan lambda optimal menghasilkan nilai MAPE yang kurang dari 20% sehingga nilai akurasi ini dapat dikategorikan sebagai baik atau dapat dikatakan hasil peramalan baik.
+perhitungan akurasi menggunakan data uji dan dengan lambda optimal menghasilkan nilai MAPE yang kurang dari 20% sehingga nilai akurasi ini dapat dikategorikan sebagai baik atau dapat dikatakan hasil peramalan baik.
 
 #### Perbandingan SES dan DES
 
