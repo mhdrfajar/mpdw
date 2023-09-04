@@ -106,7 +106,7 @@ library(ggplot2)
 ggplot() + 
   geom_line(data = training_ma, aes(x = Periode, y = High_Stock, col = "Data Latih")) +
   geom_line(data = testing_ma, aes(x = Periode, y = High_Stock, col = "Data Uji")) +
-  labs(x = "Periode Waktu", y = "High_Stock", color = "Legend") +
+  labs(x = "Periode Waktu", y = "High Stock", color = "Legend") +
   scale_colour_manual(name="Keterangan:", breaks = c("Data Latih", "Data Uji"),
                       values = c("blue", "red")) + 
   theme_bw() + theme(legend.position = "bottom",
@@ -619,4 +619,6 @@ MSEfull
 
 Kedua metode dapat dibandingkan dengan menggunakan ukuran akurasi yang sama. Contoh di atas adalah perbandingan kedua metode dengan ukuran akurasi MSE. Hasilnya didapatkan metode DES lebih baik dibandingkan metode SES dilihat dari MSE yang lebih kecil nilainya.
 
-Pada kasus ini, dari keempat metode yang telah dicobakan, metode Double Moving Average (DMA) dengan m=5 memberikan peramalan yang paling baik karena nilai MAPE yang dihasilkan merupakan yang terkecil, baik pada data latih maupun pada data uji.
+## Kesimpulan
+
+Pada kasus ini, dari keempat metode yang telah dicobakan, peramalan data yang berpola tren dengan menggunakan metode Double Moving Average (DMA) dengan m=5 manghasilkan peramalan yang paling baik karena nilai MAPE yang dihasilkan merupakan yang terkecil, baik pada data latih maupun pada data uji
