@@ -49,6 +49,10 @@ Melihat data menggunakan fungsi `View()`, struktur data menggunakan fungsi `str(
 View(data1)
 str(data1)
 dim(data1)
+
+View(data2)
+str(data2)
+dim(data2)
 ```
 
 Mengubah data agar terbaca sebagai data deret waktu dengan fungsi `ts()` .
