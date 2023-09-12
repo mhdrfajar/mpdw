@@ -90,33 +90,16 @@ vif(model)
 ```
 Dengan menggunakan metode *VIF* yang menduga adanya multikolinearitas ketika *VIF* \> 10, diperoleh bahwa terdapat multikolinearitas pada peubah $x_4$. Sehingga peubah $x_4$ dikeluarkan dari model.
 ```{r}
-#Menghapus variabel x4 dari model awal
+#Mengeluarkan variabel x4 dari model awal
 model2 = lm(y ~ x1+x2+x3, df)
 summary(model2)
 
 # Pengecekan kedua
 vif(model2)
 ```
-Setelah membuang peubah $x_4$ dari model awal, didapatkan model terbaru dengan *VIF* \< 10 pada setiap peubah bebasnya. Artinya tidak terdapat multikolinearitas pada model yang terbaru.
+Setelah membuang peubah $x_4$ dari model awal, didapatkan model terbaru dengan *VIF* \< 10 pada setiap peubah bebasnya. Artinya tidak terdapat multikolinearitas pada peubah bebas di model yang terbaru.
 
-## Uji Asumsi GAUSS MARKOV
-### sisaan dan fitted value
-```{r}
-sisaan <- residuals(model2)
-fitValue <- predict(model2)
-```
-
-### Nilai harapan sisaan sama dengan nol
-$H_0$: Nilai harapan sisaan sama dengan nol
-$H_1$: Nilai harapan sisaan tidak sama dengan nol
-```{r}
-t.test(model2$residuals,
-       mu = 0,
-       conf.level = 0.95)
-```
-Hasil uji t menunjukkan bahwa *p-value* \> $\alpha$=5% sehingga tak tolak $H_0$ atau tidak cukup bukti untuk menyatakan bahwa nilai harapan sisaan tidak sama dengan nol. Dengan kata lain, asumsi nilai harapan sisaan sama dengan nol terpenuhi.
-
-### Normalitas Sisaan
+## Uji Normalitas
 $H_0$: Sisaan menyebar normal
 $H_1$: Sisaan tidak menyebar normal
 ```{r}
@@ -128,6 +111,17 @@ library(car)
 shapiro.test(model2$residuals)
 ```
 Hasil *Kolmogorov-Smirnov test* dan *Shapiro-Wilk normality test* menunjukkan bahwa *p-value* \> $\alpha$=5% sehingga tak tolak $H_0$ atau tidak cukup bukti untuk menyatakan bahwa sisaan tidak menyebar normal. Dengan kata lain, asumsi normalitas sisaan terpenuhi.
+
+## Uji Asumsi GAUSS MARKOV
+### Nilai harapan sisaan sama dengan nol
+$H_0$: Nilai harapan sisaan sama dengan nol
+$H_1$: Nilai harapan sisaan tidak sama dengan nol
+```{r}
+t.test(model2$residuals,
+       mu = 0,
+       conf.level = 0.95)
+```
+Hasil uji t menunjukkan bahwa *p-value* \> $\alpha$=5% sehingga tak tolak $H_0$ atau tidak cukup bukti untuk menyatakan bahwa nilai harapan sisaan tidak sama dengan nol. Dengan kata lain, asumsi nilai harapan sisaan sama dengan nol terpenuhi.
 
 ### Ragam sisaan homogen
 $H_0$: ragam sisaan homogen
@@ -148,6 +142,7 @@ $H_0$: tidak ada autokorelasi (sisaan saling bebas)
 $H_1$: ada autokorelasi (sisaan tidak saling bebas)
 ```{r}
 #ACF dan PACF identifikasi autokorelasi
+sisaan <- residuals(model2)
 par(mfrow = c(1,2))
 acf(sisaan)
 pacf(sisaan)
@@ -214,7 +209,7 @@ Hasil perhitungan koefisien regresi tersebut akan menghasilkan hasil yang sama d
 
 ### Metode Hildreth-Lu
 
-Penanganan kedua adalah menggunakan metode Hildreth-Lu. Metode ini akan mencari nilai SSE terkecil dan dapat dicari secara manual maupun menggunakan packages. Jika menggunakan packages, gunakan `library` *packages* `HORM`.
+Penanganan kedua adalah menggunakan metode Hildreth-Lu. Metode ini akan mencari nilai *SSE* terkecil dan dapat dicari secara manual maupun menggunakan packages. Jika menggunakan packages, gunakan `library` *packages* `HORM`.
 
 ```{r}
 #Penanganan Autokorelasi Hildreth lu
@@ -240,7 +235,7 @@ tab <- data.frame("rho" = r, "SSE" = sapply(r, function(i){deviance(hildreth.lu.
 round(tab, 4)
 ```
 
-Pertama-tama akan dicari di mana kira-kira $ρ$ yang menghasilkan SSE minimum. Pada hasil di atas terlihat $ρ$ minimum ketika 0.8. Namun, hasil tersebut masih kurang teliti sehingga akan dicari kembali $ρ$ yang lebih optimum dengan ketelitian yang lebih. Jika sebelumnya jarak antar $ρ$ yang dicari adalah 0.1, kali ini jarak antar $ρ$ adalah 0.0001 dan dilakukan pada selang 0.7 sampai dengan 0.9.
+Pertama-tama akan dicari di mana kira-kira $ρ$ yang menghasilkan *SSE* minimum. Pada hasil di atas terlihat $ρ$ minimum ketika 0.8. Namun, hasil tersebut masih kurang teliti sehingga akan dicari kembali $ρ$ yang lebih optimum dengan ketelitian yang lebih. Jika sebelumnya jarak antar $ρ$ yang dicari adalah 0.1, kali ini jarak antar $ρ$ adalah 0.0001 dan dilakukan pada selang 0.7 sampai dengan 0.9.
 
 ```{r}
 #Rho optimal di sekitar 0.4
@@ -255,7 +250,7 @@ abline(v = tabOpt[tabOpt$SSE==min(tabOpt$SSE),"rho"], lty = 2, col="red",lwd=2)
 text(x=0.7596	, y=1011025, labels = "rho=0.7596", cex = 0.8)
 ```
 
-Perhitungan yang dilakukan aplikasi `R` menunjukkan bahwa nilai $ρ$ optimum, yaitu saat SSE terkecil terdapat pada nilai $ρ=0.7596$. Hal tersebut juga ditunjukkan pada plot. Selanjutnya, model dapat didapatkan dengan mengevaluasi nilai $ρ$ ke dalam fungsi `hildreth.lu.func`, serta dilanjutkan dengan pengujian autokorelasi dengan uji Durbin-Watson. Namun, setelah pengecekan tersebut tidak lupa koefisien regresi tersebut digunakan untuk transformasi balik. Persamaan hasil transformasi itulah yang menjadi persamaan sesungguhnya.
+Perhitungan yang dilakukan aplikasi `R` menunjukkan bahwa nilai $ρ$ optimum, yaitu saat *SSE* terkecil terdapat pada nilai $ρ=0.7596$. Hal tersebut juga ditunjukkan pada plot. Selanjutnya, model dapat didapatkan dengan mengevaluasi nilai $ρ$ ke dalam fungsi `hildreth.lu.func`, serta dilanjutkan dengan pengujian autokorelasi dengan uji Durbin-Watson. Namun, setelah pengecekan tersebut tidak lupa koefisien regresi tersebut digunakan untuk transformasi balik. Persamaan hasil transformasi itulah yang menjadi persamaan sesungguhnya.
 
 ```{r}
 #Model terbaik
@@ -273,9 +268,9 @@ Setelah dilakukan tranformasi balik, didapatkan model dengan metode Hildreth-Lu 
 dwtest(modelHL)
 ```
 
-Hasil uji Durbin-Watson juga menunjukkan bawah nilai DW sebesar $1.4092$ berada pada selang daerah tidak ada autokorelasi, yaitu pada rentang DU \< DW \< 4-DU atau $1.331 < DW < 2.669$. Hal tersebut juga didukung oleh *p-value* sebesar $0.4872$, di mana *p-value* \> $\alpha$=5%. Artinya tak tolak $H_0$ atau belum cukup bukti menyatakan bahwa ada autokorelasi dalam data nilai IPM dengan metode Hildreth-Lu pada taraf nyata 5%.
+Hasil uji *Durbin-Watson* juga menunjukkan bawah nilai *p-value* sebesar $0.4872$, di mana *p-value* \> $\alpha$=5%. Artinya tak tolak $H_0$ atau belum cukup bukti menyatakan bahwa terdapat autokorelasi dengan metode *Hildreth-Lu* pada taraf nyata 5%.
 
-Terakhir, akan dibandingkan nilai SSE dari ketiga metode (metode awal, metode Cochrane-Orcutt, dan Hildreth-Lu).
+Terakhir, akan dibandingkan nilai *SSE* dari ketiga metode (metode awal, metode *Cochrane-Orcutt*, dan *Hildreth-Lu*).
 
 ```{r}
 #Perbandingan
@@ -292,8 +287,8 @@ row.names(akurasi) <- c("SSE","MSE")
 akurasi
 ```
 
-Berdasarkan hasil tersebut dapat diketahui bahwa hasil penanganan autokorelasi dengan metode Cochrane-Orcutt dan Hildreth-Lu memiliki SSE yang hampir sama,  metode Cochrane-Orcutt menghasilkan SSE sebesar $1011025.320$ sedangkan metode Hildreth-Lu menghasilkan SSE sebesar $1011025.323$. Kedua metode tersebut menghasilkan SSE yang lebih baik dibandingkan model awal ketika autokorelasi masih terjadi, yaitu sebesar $2380466.80$.
+Berdasarkan hasil tersebut dapat diketahui bahwa hasil penanganan autokorelasi dengan metode *Cochrane-Orcutt* dan *Hildreth-Lu* memiliki *SSE* yang hampir sama,  metode *Cochrane-Orcutt* menghasilkan *SSE* sebesar $1011025.320$ sedangkan metode *Hildreth-Lu* menghasilkan *SSE* sebesar $1011025.323$. Kedua metode tersebut menghasilkan *SSE* yang lebih baik dibandingkan model awal ketika autokorelasi masih terjadi, yaitu sebesar $2380466.80$.
 
 # Simpulan
 
-Autokorelasi yang terdapat pada data Wind Power Forecasting terjadi akibat adanya korelasi di antara unsur penyusunnya. Indikator data  Wind Power Forecasting yang erat kaitannya dengan pergerakan angin yang berbeda-beda sesuai dengan periode waktu tertentu sangat rawan menjadi penyebab adanya autokorelasi. Adanya autokorelasi menyebabkan model regresi kurang baik karena akan meningkatkan galatnya. Autokorelasi dapat dideteksi secara eksploratif melalui plot sisaan, ACF, dan PACF, serta dengan uji formal Runs, Durbin-Watson, dan Breusch-Godfrey. Namun, autokorelasi tersebut dapat ditangani dengan metode Cochrane-Orcutt dan Hildreth-Lu. Kedua metode menghasilkan nilai SSE yang hampir sama, artinya keduanya baik untuk digunakan.
+Autokorelasi yang terdapat pada data Wind Power Forecasting terjadi akibat adanya korelasi di antara unsur penyusunnya. Indikator data  Wind Power Forecasting yang erat kaitannya dengan pergerakan angin yang berbeda-beda sesuai dengan periode waktu tertentu sangat rawan menjadi penyebab adanya autokorelasi. Adanya autokorelasi menyebabkan model regresi kurang baik karena akan meningkatkan galatnya. Autokorelasi dapat dideteksi secara eksploratif melalui plot sisaan, ACF, dan PACF, serta dengan uji formal Runs, Durbin-Watson, dan Breusch-Godfrey. Namun, autokorelasi tersebut dapat ditangani dengan metode Cochrane-Orcutt dan Hildreth-Lu. Kedua metode menghasilkan nilai *SSE* yang hampir sama, artinya keduanya baik untuk digunakan.
