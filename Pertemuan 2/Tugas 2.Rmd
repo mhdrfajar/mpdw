@@ -2,24 +2,24 @@
 title: "Tugas Pertemuan 2 Metode Peramalan Deret Waktu"
 author: "Muhammad Rizky Fajar"
 output:
-  pdf_document: default
-  word_document: default
   html_document:
     theme: yeti
     toc: true
     toc_float: true
+  word_document: default
+  pdf_document: default
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Dataset
+
 Dataset dapat diakses secara keseluruhan pada laman https://www.kaggle.com/datasets/theforcecoder/wind-power-forecasting. Dateset tersebut merupakan data dari suatu kincir angin tertentu yang mengandung berbagai fitur cuaca, turbin dan rotor. Data telah direkam sejak Januari 2018 hingga Maret 2020 dengan interval waktu 10 menit.   
 
 Penelitian ini menggunakan 165 baris data, mulai dari baris data pada 2020-03-23 23:40:00+00:00 hingga 2020-03-25 03:00:00+00:00. Peubah yang digunakan merupakan peubah "ActivePower" yang berfungsi sebagai peubah tak bebas (y) serta peubah "BearingShaftTemperature", "GeneratorRPM", "MainBoxTemperature", dan "WindSpeed" yang berfungsi sebagai peubah bebas (x).
 
 ## Impor Data
-
 ```{r}
 library(rio)
 df <- import("https://raw.githubusercontent.com/mhdrfajar/mpdw/main/Pertemuan%202/data_turbin.csv")
@@ -36,8 +36,8 @@ x2 = df$x2
 x3 = df$x3
 x4 = df$x4
 ```
-## Pemanggilan *Packages*
 
+## Pemanggilan *Packages*
 ```{r}
 library(dplyr)
 library(GGally)
@@ -51,9 +51,7 @@ library(orcutt) #untuk membuat model regresi Cochrane-Orcutt
 library(HoRM) #untuk membuat model regresi Hildreth-Lu
 ```
 
-
 ## Eksplorasi Data
-
 ```{r}
 # Menghasilkan plot ggpairs
 plot <- ggpairs(df[sapply(df, is.numeric)])
@@ -68,19 +66,22 @@ plot <- plot + theme(
 # Tampilkan gambar
 print(plot)
 ```
-Terdapat korelasi yang tinggi antara peubah y (Active Power) dengan x1 (BearingShaftTemperature), x2 (GeneratorRPM), dan x4 (Wind Power)
+
+Terdapat korelasi yang tinggi antara peubah $y$ (Active Power) dengan $x_1$ (BearingShaftTemperature), $x_2$ (GeneratorRPM), dan $x_4$ (Wind Power)
 
 ## Model Regresi Linear Berganda OLS
 ```{r}
 model <- lm(y ~ x1+x2+x3+x4, df)
 summary(model)
 ```
+
 ## Model Regresi Terbaik
 ```{r}
 bestsubset <- ols_step_best_subset(model)
 bestsubset
 ```
-Model terbaik dengan kriteria AIC terkecil adalah model awal dengan peubah bebas $x_1$, $x_2$, $x_3$, dan $x_4$
+
+Model terbaik dengan kriteria *AIC* terkecil adalah model awal dengan peubah bebas $x_1$, $x_2$, $x_3$, dan $x_4$
 
 ## Pengecekan Multikolinearitas
 ```{r}
@@ -88,7 +89,9 @@ Model terbaik dengan kriteria AIC terkecil adalah model awal dengan peubah bebas
 library(car)
 vif(model)
 ```
+
 Dengan menggunakan metode *VIF* yang menduga adanya multikolinearitas ketika *VIF* \> 10, diperoleh bahwa terdapat multikolinearitas pada peubah $x_4$. Sehingga peubah $x_4$ dikeluarkan dari model.
+
 ```{r}
 #Mengeluarkan variabel x4 dari model awal
 model2 = lm(y ~ x1+x2+x3, df)
@@ -97,10 +100,13 @@ summary(model2)
 # Pengecekan kedua
 vif(model2)
 ```
+
 Setelah membuang peubah $x_4$ dari model awal, didapatkan model terbaru dengan *VIF* \< 10 pada setiap peubah bebasnya. Artinya tidak terdapat multikolinearitas pada peubah bebas di model yang terbaru.
 
 ## Uji Normalitas
+
 $H_0$: Sisaan menyebar normal
+
 $H_1$: Sisaan tidak menyebar normal
 ```{r}
 # Kolmogorov-Smirnov test
@@ -110,21 +116,27 @@ ks.test(model2$residuals, "pnorm", mean=mean(model2$residuals), sd=sd(model2$res
 library(car)
 shapiro.test(model2$residuals)
 ```
+
 Hasil *Kolmogorov-Smirnov test* dan *Shapiro-Wilk normality test* menunjukkan bahwa *p-value* \> $\alpha$=5% sehingga tak tolak $H_0$ atau tidak cukup bukti untuk menyatakan bahwa sisaan tidak menyebar normal. Dengan kata lain, asumsi normalitas sisaan terpenuhi.
 
 ## Uji Asumsi GAUSS MARKOV
 ### Nilai harapan sisaan sama dengan nol
+
 $H_0$: Nilai harapan sisaan sama dengan nol
+
 $H_1$: Nilai harapan sisaan tidak sama dengan nol
 ```{r}
 t.test(model2$residuals,
        mu = 0,
        conf.level = 0.95)
 ```
+
 Hasil uji t menunjukkan bahwa *p-value* \> $\alpha$=5% sehingga tak tolak $H_0$ atau tidak cukup bukti untuk menyatakan bahwa nilai harapan sisaan tidak sama dengan nol. Dengan kata lain, asumsi nilai harapan sisaan sama dengan nol terpenuhi.
 
 ### Ragam sisaan homogen
+
 $H_0$: ragam sisaan homogen
+
 $H_1$: ragam sisaan tidak homogen
 ```{r}
 # Breusch-Pagan test
@@ -135,10 +147,13 @@ bptest(model2)
 library(car)
 ncvTest(model2)
 ```
+
 Hasil *Breusch-Pagan test* dan *Non-constant Variance Score (NCV) test* menunjukkan bahwa *p-value* \< $\alpha$=5% sehingga tolak $H_0$ atau cukup bukti untuk menyatakan bahwa ragam sisaan tidak homogen. Dengan kata lain, asumsi ragam sisaan homogen tidak terpenuhi.
 
 ### Sisaan saling bebas
+
 $H_0$: tidak ada autokorelasi (sisaan saling bebas)
+
 $H_1$: ada autokorelasi (sisaan tidak saling bebas)
 ```{r}
 #ACF dan PACF identifikasi autokorelasi
@@ -158,10 +173,10 @@ dwtest(model2)
 # Breusch-Godfrey Test
 bgtest(model2)
 ```
+
 Berdasarkan plot ACF dan PACF, terlihat terdapat plot yang berada di luar rentang batas yang artinya dapat diperoleh kesimpulan bahwa tolak $H_0$ atau cukup bukti untuk menyatakan bahwa terdapat autokorelasi. Kesimpulan tersebut juga didukung oleh hasil uji formal menggunakan *Runs test*, *Durbin Watson test*, dan *Breusch-Godfrey test* yang menghasilkan *p-value* \< $\alpha$=5%. Oleh karena itu, diperlukan penangan autokorelasi. Penanganan yang akan digunakan menggunakan dua metode, yaitu *Cochrane-Orcutt* dan *Hildret-Lu*.
 
 ## Penanganan Autokorelasi
-
 ### Metode Cochrane-Orcutt
 
 Penanganan metode Cochrane-Orcutt dapat dilakukan dengan bantuan packages Orcutt pada aplikasi `R` maupun secara manual. Berikut ini ditampilkan cara menggunakan bantuan `library` *packages* `Orcutt`.
@@ -289,6 +304,6 @@ akurasi
 
 Berdasarkan hasil tersebut dapat diketahui bahwa hasil penanganan autokorelasi dengan metode *Cochrane-Orcutt* dan *Hildreth-Lu* memiliki *SSE* yang hampir sama,  metode *Cochrane-Orcutt* menghasilkan *SSE* sebesar $1011025.320$ sedangkan metode *Hildreth-Lu* menghasilkan *SSE* sebesar $1011025.323$. Kedua metode tersebut menghasilkan *SSE* yang lebih baik dibandingkan model awal ketika autokorelasi masih terjadi, yaitu sebesar $2380466.80$.
 
-# Simpulan
+## Simpulan
 
 Autokorelasi yang terdapat pada data Wind Power Forecasting terjadi akibat adanya korelasi di antara unsur penyusunnya. Indikator data  Wind Power Forecasting yang erat kaitannya dengan pergerakan angin yang berbeda-beda sesuai dengan periode waktu tertentu sangat rawan menjadi penyebab adanya autokorelasi. Adanya autokorelasi menyebabkan model regresi kurang baik karena akan meningkatkan galatnya. Autokorelasi dapat dideteksi secara eksploratif melalui plot sisaan, ACF, dan PACF, serta dengan uji formal Runs, Durbin-Watson, dan Breusch-Godfrey. Namun, autokorelasi tersebut dapat ditangani dengan metode Cochrane-Orcutt dan Hildreth-Lu. Kedua metode menghasilkan nilai *SSE* yang hampir sama, artinya keduanya baik untuk digunakan.
