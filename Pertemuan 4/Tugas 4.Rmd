@@ -197,7 +197,7 @@ Proses AR dapat dituliskan sebagai berikut:
 
 $$ y_{t} = c + e_t + \phi_{1}Y_{t-1} + \phi_{2}Y_{t-2} + \dots + \phi_{q}Y_{t-q} = c+{e_t+\sum_{i=1}^p \phi_iY_{t-i}} $$ Terlihat bahwa $Y_t$ berperan penting dalam pembangkitan proses AR.
 
-## Pembangkitan Proses AR
+## Pembangkitan Proses AR(2)
 
 Akan dicoba membangkitkan proses AR paling sederhana, yaitu AR(2) dengan $\phi_1 = 0.5$ dan $\phi_2 = 0.2$ sebanyak 300 observasi dan $c=0$.
 
@@ -257,7 +257,7 @@ Berdasarkan plot PACF tersebut, terlihat bahwa plot PACF *cuts off* pada lag ked
 TSA::eacf(ar)
 ```
 
-Berdasarkan pola segitiga nol pada plot EACF, terlihat bahwa segitiga nol berada pada ordo AR(2) dan ordo MA(0)
+Berdasarkan pola segitiga nol pada plot EACF, terlihat bahwa segitiga nol berada pada ordo AR(1) dan ordo MA(1)
 
 ### Scatterplot Antar Lag
 
@@ -440,7 +440,7 @@ TSA::eacf(y.arma)
 TSA::eacf(arma22)
 ```
 
-Berdasarkan pola segitiga nol pada plot EACF, terlihat bahwa segitiga nol berada pada ordo AR(1) dan ordo MA(1)
+Berdasarkan pola segitiga nol pada plot EACF, terlihat bahwa segitiga nol berada pada ordo AR(1) dan ordo MA(3)
 
 ### Scatterplot Antar Lag
 
