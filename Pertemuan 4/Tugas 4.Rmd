@@ -1,7 +1,6 @@
 ---
 title: "Tugas Pertemuan 4 Metode Peramalan Deret Waktu"
-author: 
-Muhammad Rizky Fajar
+author: "Muhammad Rizky Fajar"
 output:
   html_document:
     theme: yeti
