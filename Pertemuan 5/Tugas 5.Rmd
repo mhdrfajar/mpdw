@@ -1,6 +1,6 @@
 ---
 title: Tugas Pertemuan 5 Metode Peramalan Deret Waktu
-author: "Muhammad Rizky Fajar"
+author: "Muhammad Rizky Fajar (G1401211009)"
 output:
   html_document:
       theme: united
@@ -14,7 +14,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Attaching package
+# Attaching package
 
 ```{r}
 library(ggplot2)
@@ -23,7 +23,7 @@ library(tseries)
 library(MASS)
 ```
 
-## Impor Data
+# Impor Data
 
 ```{r}
 library(rio)
@@ -32,7 +32,7 @@ stas = stas[,3]
 stas = ts(stas)
 stas
 ```
-
+# Analisis Data Penuh
 ## Plot *Time Series*
 
 ```{r}
@@ -80,9 +80,9 @@ bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
 
 Gambar di atas menunjukkan nilai *rounded value* ($\lambda$) optimum sebesar **0.474** dan pada selang kepercayaan 95% nilai memiliki batas bawah **0.422** dan batas atas **0.527**. Selang tersebut tidak memuat nilai satu sehingga dapat dikatakan bahwa data **tidak stasioner dalam ragam**.
 
-## Partisi Data
+# Analisis Data Partisi
 
-### Bagian 1
+## Bagian 1
 
 ```{r}
 dt_stas1 <- stas[1:275] |> ts()
@@ -90,7 +90,7 @@ mean(dt_stas1)
 var(dt_stas1)
 ```
 
-#### Plot Time Series
+### Plot Time Series
 
 ```{r}
 ts.plot(dt_stas1)
@@ -102,7 +102,7 @@ dt_stas1 |> as_tsibble() |>
 
 Plot deret waktu di atas menunjukkan bahwa data **tidak stasioner dalam rataan** yang ditandai dengan terdapatnya pola trend pada data. Plot deret waktu tersebut juga menunjukan bahwa data **tidak stasioner dalam ragam** yang ditandai dengan lebar pita yang cenderung tidak sama.
 
-#### Plot ACF
+### Plot ACF
 
 ```{r}
 acf(dt_stas1)
@@ -110,7 +110,7 @@ acf(dt_stas1)
 
 Berdasarkan plot ACF, terlihat bahwa plot ACF pada data tersebut menurun secara perlahan (*slowly tails off*). Hal tersebut mengindikasikan bahwa data **tidak stasioner dalam rataan**.
 
-#### Uji ADF
+### Uji ADF
 
 $H_0$ : Data tidak stasioner dalam rataan
 
@@ -122,7 +122,7 @@ tseries::adf.test(dt_stas1)
 
 Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.2702 yang lebih besar dari taraf nyata 5% sehingga tak tolak $H_0$ dan menandakan bahwa data **tidak stasioner dalam rataan**. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF.
 
-#### Plot Boxcox
+### Plot Boxcox
 
 ```{r}
 index <- seq(1:275)
@@ -136,7 +136,7 @@ bc$x[bc$y > max(bc$y) - 1/2 * qchisq(.95,1)]
 
 Gambar di atas menunjukkan nilai *rounded value* ($\lambda$) optimum sebesar **0.792** dan pada selang kepercayaan 95% nilai memiliki batas bawah **0.730** dan batas atas **0.855**. Selang tersebut tidak memuat nilai satu sehingga dapat dikatakan bahwa data **tidak stasioner dalam ragam**.
 
-### Bagian 2
+## Bagian 2
 
 ```{r}
 dt_stas2 <- stas[276:515] |> ts()
@@ -144,7 +144,7 @@ mean(dt_stas2)
 var(dt_stas2)
 ```
 
-#### Plot Time Series
+### Plot Time Series
 
 ```{r}
 dt_stas2 |> as_tsibble() |> 
@@ -155,7 +155,7 @@ dt_stas2 |> as_tsibble() |>
 
 Plot deret waktu di atas menunjukkan bahwa data **tidak stasioner dalam rataan** yang ditandai dengan terdapatnya pola trend pada data. Plot deret waktu tersebut juga menunjukan bahwa data **tidak stasioner dalam ragam** yang ditandai dengan lebar pita yang cenderung tidak sama.
 
-#### Plot ACF
+### Plot ACF
 
 ```{r}
 acf(dt_stas2)
@@ -163,7 +163,7 @@ acf(dt_stas2)
 
 Berdasarkan plot ACF, terlihat bahwa plot ACF pada data tersebut menurun secara perlahan (*slowly tails off*). Hal tersebut mengindikasikan bahwa data **tidak stasioner dalam rataan**.
 
-#### Uji ADF
+### Uji ADF
 
 $H_0$ : Data tidak stasioner dalam rataan
 
@@ -175,7 +175,7 @@ adf.test(dt_stas2)
 
 Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.9141 yang lebih besar dari taraf nyata 5% sehingga tak tolak $H_0$ dan menandakan bahwa data **tidak stasioner dalam rataan**. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF.
 
-#### Plot Boxcox
+### Plot Boxcox
 
 ```{r}
 index <- seq(276:515)
