@@ -1,11 +1,11 @@
 ---
-title: "Tugas Pertemuan 5 Metode Peramalan Deret Waktu"
+title: Tugas Pertemuan 5 Metode Peramalan Deret Waktu
 author: "Muhammad Rizky Fajar"
 output:
   html_document:
-    theme: yeti
-    toc: true
-    toc_float: true
+      theme: united
+      toc: yes
+      toc_float: yes
   word_document: default
   pdf_document: default
 ---
@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Attaching package
+
 ```{r}
 library(ggplot2)
 library(tsibble)
