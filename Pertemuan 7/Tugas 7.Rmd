@@ -14,7 +14,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Packages
+## Packages
 
 ```{r}
 library(ggplot2)
@@ -28,7 +28,7 @@ library(aTSA)
 library(graphics)
 ```
 
-# Input Data 1
+## Input Data
 
 Digunakan data saham yang dalam hal ini hanya digunakan data periode ke 51 hingga 300.
 
@@ -90,7 +90,7 @@ $H_1$ : Data stasioner dalam rataan
 
 Berdasarkan uji ADF tersebut, didapat *p-value* sebesar 0.3787 yang lebih besar dari taraf nyata 5% sehingga tak tolak $H_0$ dan menandakan bahwa data tidak stasioner dalam rataan. Hal ini sesuai dengan hasil eksplorasi menggunakan plot time series dan plot ACF, sehingga ketidakstasioneran model kedepannya harus ditangani
 
-### Plot Box-Cox
+### Plot Box-Cox (DIPERTANYAKAN)
 
 ```{r}
 index <- seq(1:215)
@@ -111,15 +111,7 @@ train.diff<-diff(train.ts,differences = 1)
 plot.ts(train.diff, lty=1, xlab="waktu", ylab="Data Difference 1 saham", main="Plot Difference saham")
 ```
 
-Berdasarkan plot data deret waktu, terlihat bahwa data belum stasioner dalam rataan ditandai dengan data tidak bergerak pada nilai tengah.
-
-### Differences = 2
-```{r}
-train.diff<-diff(train.ts,differences = 4) 
-plot.ts(train.diff, lty=1, xlab="waktu", ylab="Data Difference 2 saham", main="Plot Difference saham")
-```
-
-Berdasarkan plot data deret waktu, terlihat bahwa data sudah stasioner dalam rataan ditandai dengan data bergerak pada nilai tengah tertentu (tidak terdapat trend ataupun musiman pada data) yaitu pada nilai 0
+Berdasarkan plot data deret waktu, terlihat bahwa data sudah stasioner dalam rataan ditandai dengan data bergerak pada nilai tengah tertentu (tidak terdapat trend ataupun musiman pada data)
 
 ### Plot ACF
 
@@ -166,7 +158,7 @@ Jika baik plot ACF maupun plot PACF keduanya dianggap tails of, maka model yang 
 eacf(train.diff)
 ```
 
-Identifikasi model menggunakan plot EACF dilakukan dengan melihat ujung segitiga pada pola segitiga nol. Dalam hal ini model tentatif yang terbentuk adalah ARIMA(1,2,2), ARIMA(2,2,1), dan ARIMA(3,2,2)
+Identifikasi model menggunakan plot EACF dilakukan dengan melihat ujung segitiga pada pola segitiga nol. Dalam hal ini model tentatif yang terbentuk adalah ARIMA(1,1,2), ARIMA(3,1,0), dan ARIMA(3,1,2)
 
 ## Pendugaan Parameter Model Tentatif
 
@@ -193,28 +185,28 @@ model3.da=Arima(train.diff, order=c(2,1,0),method="ML")
 summary(model3.da) #AIC=1078.94
 lmtest::coeftest(model3.da) #seluruh parameter signifikan
 ```
-### ARIMA(1,2,2)
+### ARIMA(1,1,2)
 
 ```{r}
-model4.da=Arima(train.diff, order=c(1,2,2),method="ML")
-summary(model4.da) #AIC=1088.92
-lmtest::coeftest(model4.da) #parameter ma1 dan ma 2 signifikan
+model4.da=Arima(train.diff, order=c(1,1,2),method="ML")
+summary(model4.da) #AIC=1078.94
+lmtest::coeftest(model4.da) #semua parameter signifikan
 ```
 
-### ARIMA(2,2,1)
+### ARIMA(3,1,0)
 
 ```{r}
-model5.da=Arima(train.diff, order=c(2,2,1),method="ML")
-summary(model5.da) #AIC=1143.51
+model5.da=Arima(train.diff, order=c(3,1,0),method="ML")
+summary(model5.da) #AIC=1111.87
 lmtest::coeftest(model5.da) #seluruh parameter signifikan
 ```
 
-### ARIMA(3,2,2)
+### ARIMA(3,1,2)
 
 ```{r}
-model6.da=Arima(train.diff, order=c(3,2,2),method="ML")
-summary(model6.da) #AIC=1083.65
-lmtest::coeftest(model6.da) #parameter ar2, ma1, dan ma2 signifikan
+model6.da=Arima(train.diff, order=c(3,1,2),method="ML")
+summary(model6.da) #AIC=1075.69
+lmtest::coeftest(model6.da) #parameter ar1, ar2, ar3, dan ma2 signifikan
 ```
 
 Berdasarkan pendugaan parameter di atas, nilai AIC terkecil dimiliki oleh model ARIMA(2,1,2) sehingga model yang dipilih adalah model ARIMA(2,1,2).
