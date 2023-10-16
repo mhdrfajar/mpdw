@@ -317,4 +317,4 @@ perbandingan.da
 accuracy(ts(hasil[-1]), head(test.ts, n=35))
 ```
 
-Diperoleh MAPE < 10% dan  yang artinya model ini dikategorikan sangat baik dalam meramal nilai saham 35 hari kedepan
+Diperoleh MAPE < 10% dan  yang artinya model ini dikategorikan sangat baik dalam meramal nilai saham 35 hari kedepan.
