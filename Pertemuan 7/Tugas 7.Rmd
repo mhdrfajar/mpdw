@@ -30,7 +30,7 @@ library(graphics)
 
 # Input Data 1
 
-Digunakan data saham yang dalam hal ini hanya digunakan data periode ke 51 hingga 250.
+Digunakan data saham yang dalam hal ini hanya digunakan data periode ke 51 hingga 300.
 
 ```{r}
 library(rio)
