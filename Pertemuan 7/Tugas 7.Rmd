@@ -215,7 +215,7 @@ Berdasarkan pendugaan parameter di atas, nilai AIC terkecil dimiliki oleh model 
 
 Model terbaik hasil identifikasi kemudian dicek asumsi sisaannya. Sisaan model ARIMA harus memenuhi asumsi normalitas, kebebasan sisaan, dan kehomogenan ragam. Diagnostik model dilakukan secara eksplorasi dan uji formal.
 
-### Eksplorasi Sisaan (dipertanyakan)
+### Eksplorasi Sisaan
 
 ```{r}
 #Eksplorasi 
